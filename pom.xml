@@ -45,21 +45,48 @@
     </dependencies>
     
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.0</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                        <showDeprecation>true</showDeprecation>
-                        <showWarnings>true</showWarnings>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+             
+        </plugins>
     </build>
+    
+    <scm>
+        <connection>scm:git:git@github.com:ssledz/fluent-dbunit.git</connection>
+        <url>scm:git:git@github.com:ssledz/fluent-dbunit.git</url>
+        <developerConnection>scm:git:git@github.com:ssledz/fluent-dbunit.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+  
+    <distributionManagement>
+        <repository>
+            <id>repo</id>
+            <name>Internal Repository</name>
+            <url>${internal.repo.path}</url>
+        </repository>
+        
+        <snapshotRepository>
+            <id>repo</id>
+            <name>Internal Repository</name>
+            <url>${internal.repo.path}</url>
+        </snapshotRepository>
+    </distributionManagement>
     
 </project>
