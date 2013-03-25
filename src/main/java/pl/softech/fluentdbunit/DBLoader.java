@@ -69,8 +69,6 @@ public class DBLoader {
 	 */
 	private final AbstractDatabaseTester databaseTester;
 
-	private IDatabaseConnection conn;
-
 	/**
 	 * Create loader.
 	 * 
@@ -88,7 +86,7 @@ public class DBLoader {
 	 * @throws Exception
 	 */
 	public DBLoader cleanInsert(IDataSet dataSet) throws Exception {
-		conn = databaseTester.getConnection();
+		IDatabaseConnection conn = databaseTester.getConnection();
 		DatabaseOperation.CLEAN_INSERT.execute(conn, dataSet);
 		conn.close();
 		return this;
