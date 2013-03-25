@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Fluent Db Unit" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+    <bannerLeft>
+        <name>A Fluent Db Unit Site</name>
+        <src>/images/fluent-db-unit-banner.jpg</src>
+        <href>/</href>
+    </bannerLeft>
+
+    <poweredBy>
+        <logo name="sof-tech" href="http://sof-tech.pl"
+          img="/images/sof-tech-banner.jpg"/>
+    </poweredBy>
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.2.1</version>
+    </skin>
+    <custom>
+        <fluidoSkin>
+            <sideBarEnabled>false</sideBarEnabled>
+            <googlePlusOne />
+        </fluidoSkin>
+    </custom>
+
+
+    <body>
+        <links>
+            <item name="sof-tech" href="http://sof-tech.pl"/>
+        </links>
+
+<!--
+        <menu name="Dokumentacja">
+            <item name="APT Format" href="format.html"/>
+            <item name="FAQ" href="faq.html"/>
+        </menu>
+
+        <menu ref="reports"/>
+        -->
+    </body>
+</project>

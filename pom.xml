@@ -63,6 +63,41 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <locales>en,pl</locales>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.kohsuke</groupId>
+                        <artifactId>doxia-module-markdown</artifactId>
+                        <version>1.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+             
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site-deploy</phase>
+                        <configuration>
+                            <path>${project.version}</path>
+                            <merge>true</merge>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin> 
              
         </plugins>
     </build>

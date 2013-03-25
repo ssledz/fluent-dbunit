@@ -1,0 +1,42 @@
+Budowanie ze zrodel
+-------------------
+
+    git clone https://github.com/ssledz/fluent-dbunit.git
+    cd cd fluent-dbunit
+    mvn package
+
+Zaleznosci
+----------
+
+    <dependencies>
+        <dependency>
+            <artifactId>fluent-dbunit</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+Inicjalizacja tabelki account 3 wierszami danych
+------------------------------------------------
+
+    DBLoader.forDB(ds).cleanInsert(dataSet(table("account", //
+                cols("id", "login"), //
+                row("1", "Login1"), //
+                row("2", "Login2"), //
+                row("3", "Login3") //
+    )));
+
+
+Wypisanie zawartosci danej tabelki
+----------------------------------
+
+    System.out.println(DBUtils.dataSet2String(DBExporter.forDB(ds).table("account").getDataSet()));
+
+out:
+
+    Table: account
+
+    |ID                       |LOGIN                    |
+    |1                        |Login1                   |
+    |2                        |Login2                   |
+    |3                        |Login3                   |
