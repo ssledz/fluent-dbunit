@@ -7,11 +7,19 @@
     <packaging>jar</packaging>
 
     <name>fluent-dbunit</name>
-    <url>http://maven.apache.org</url>
+    <url>http://ssledz.github.com/fluent-dbunit</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <developers>
+        <developer>
+            <email>slawomir.sledz@sof-tech.pl</email>
+            <name>Sławomir Śledź</name>
+            <url>http://sof-tech.pl</url>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
@@ -84,27 +92,27 @@
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.5</version>
+                <version>0.6</version>
+                <configuration>
+                    <message>Creating site for ${project.version}</message>
+                    <repositoryName>fluent-dbunit</repositoryName>
+                    <repositoryOwner>ssledz</repositoryOwner>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>site</goal>
                         </goals>
                         <phase>site-deploy</phase>
-                        <configuration>
-                            <path>${project.version}</path>
-                            <merge>true</merge>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin> 
-             
         </plugins>
     </build>
     
     <scm>
         <connection>scm:git:git@github.com:ssledz/fluent-dbunit.git</connection>
-        <url>scm:git:git@github.com:ssledz/fluent-dbunit.git</url>
+        <url>https://github.com/ssledz/fluent-dbunit.git</url>
         <developerConnection>scm:git:git@github.com:ssledz/fluent-dbunit.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
@@ -115,6 +123,7 @@
             <name>Internal Repository</name>
             <url>${internal.repo.path}</url>
         </repository>
+        
         
         <snapshotRepository>
             <id>repo</id>
