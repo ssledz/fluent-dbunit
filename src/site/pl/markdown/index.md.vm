@@ -8,6 +8,13 @@ Budowanie ze zrodel
 Zaleznosci
 ----------
 
+    <repositories>
+        <repository>
+            <id>mvn.repo</id>
+            <url>https://github.com/ssledz/mvn-repo/raw/master</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <artifactId>fluent-dbunit</artifactId>
