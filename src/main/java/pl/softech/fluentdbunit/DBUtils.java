@@ -68,13 +68,13 @@ public class DBUtils {
 
         @Override
         public String getString(String columnName) {
-            return current.get(columnName).toString();
+            return current.get(columnName.toLowerCase()).toString();
         }
 
         @Override
         public Integer getInteger(String columnName) {
 
-            Object value = current.get(columnName);
+            Object value = current.get(columnName.toLowerCase());
 
             if (value instanceof Integer) {
                 return (Integer) value;
@@ -164,7 +164,7 @@ public class DBUtils {
 
             for (int j = 0; j < columns.length; j++) {
                 String columnName = columns[j].getColumnName();
-                columnName2Value.put(columnName, table.getValue(i, columnName));
+                columnName2Value.put(columnName.toLowerCase(), table.getValue(i, columnName));
             }
             rows.add(columnName2Value);
         }

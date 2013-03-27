@@ -61,11 +61,11 @@ public class DBExporter {
         }
 
         public void write2Xml(String fileName) throws Exception {
-            FlatXmlDataSet.write(dataSet, new FileOutputStream(fileName));
+            FlatXmlDataSet.write(dataSet, new FileOutputStream(new File(fileName)));
         }
 
-        public void write2Csv(String fileName) throws Exception {
-            CsvDataSetWriter.write(dataSet, new File(fileName));
+        public void write2Csv(String dirName) throws Exception {
+            CsvDataSetWriter.write(dataSet, new File(dirName));
         }
 
         public IDataSet getDataSet() {

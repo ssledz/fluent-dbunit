@@ -17,33 +17,205 @@ Dependencies
 
     <dependencies>
         <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.8</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>pl.softech</groupId>
             <artifactId>fluent-dbunit</artifactId>
-            <version>1.0</version>
-            <scope>test</scope>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 
-Filling account table with 3 rows of data
-------------------------------------------------
+Let's test some code :)
+----------------------
 
-    DBLoader.forDB(ds).cleanInsert(dataSet(table("account", //
-                cols("id", "login"), //
-                row("1", "Login1"), //
-                row("2", "Login2"), //
-                row("3", "Login3") //
-    )));
+Assume that You have to test java class [BookstoreDao](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDao.java),
+which implements following interface
 
+    public interface IBookstoreDao {
+    
+        List<Author> fetchAuthorsByName(String name) throws SQLException;
+        void save(Author author) throws SQLException;
+        List<Book> fetchBooksByAuthor(Author author) throws SQLException;
+    
+    }
 
-Printing the content of the table
-----------------------------------
+Let's write the test for [fetchAuthorsByName](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDaoTest.java)
 
-    System.out.println(DBUtils.dataSet2String(DBExporter.forDB(ds).table("account").getDataSet()));
+    @Test
+    public void testFetchAuthorsByName() throws Exception {
 
-out:
+        //loads data to author's table 
+        DBLoader.forDB(ds).cleanInsert(dataSet(table("author", //
+                cols("id", "name", "lastname"), //
+                row("1", "Orson", "Card"), //
+                row("2", "Terry", "Pratchett"), //
+                row("3", "Magdalena", "Kozak"), //
+                row("4", "Miroslav", "Žamboch"), //
+                row("5", "Terry", "Goodkind") //
+                )));
 
-    Table: account
+        BookstoreDao dao = new BookstoreDao(ds);
+        Iterator<Author> it = dao.fetchAuthorsByName("Terry").iterator();
+        Assert.assertEquals("Pratchett", it.next().getLastname());
+        Assert.assertEquals("Goodkind", it.next().getLastname());
 
-    |ID                       |LOGIN                    |
-    |1                        |Login1                   |
-    |2                        |Login2                   |
-    |3                        |Login3                   |
+    }
+
+As You see filling a table with data is extremely easy. You can achieve this by
+writing simple one liner :)
+
+If You don't like to manage data in your source code you can store them either in csv or xml file
+
+    @Test
+    public void testFetchAuthorsByName2() throws Exception {
+        String dbxml = BookstoreDaoTest.class.getResource("db.xml").getFile();
+        
+        //loades data from file to memory
+        IDataSet dataSet = DBLoader.fromXml(dbxml);
+        
+        //loads data to tables
+        DBLoader.forDB(ds).cleanInsert(dataSet);
+        
+        //prints tables in dataset
+        System.out.println(DBUtils.dataSet2String(dataSet));
+        
+        BookstoreDao dao = new BookstoreDao(ds);
+        Iterator<Author> it = dao.fetchAuthorsByName("Terry").iterator();
+        Assert.assertEquals("Pratchett", it.next().getLastname());
+    }
+
+[db.xml](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db.xml) could look like
+
+    <?xml version='1.0' encoding='UTF-8'?>
+    <dataset>
+      <author ID="1" NAME="Orson" LASTNAME="Card"/>
+      <author ID="2" NAME="Terry" LASTNAME="Pratchett"/>
+      <author ID="3" NAME="Magdalena" LASTNAME="Kozak"/>
+      <author ID="4" NAME="Miroslav" LASTNAME="&#381;amboch"/>
+      <author ID="5" NAME="Terry" LASTNAME="Goodkind"/>
+      <book ID="1" TITLE="Ender&apos;s Game" AUTHOR_ID="5"/>
+    </dataset>
+
+Next method to test is 'save' which creates or updates records in db
+
+    @Test
+    public void testSaveAuthor() throws Exception {
+
+        //loads data to author's table 
+        DBLoader.forDB(ds).cleanInsert(dataSet(table("author", //
+                cols("id", "name", "lastname"), //
+                row("5", "Orson", "Card") //
+                )));
+
+        BookstoreDao dao = new BookstoreDao(ds);
+        Author[] authors = {
+            new Author(-1, "Terry", "Pratchett"),
+            new Author(5, "Orson Scott", "Card")
+        };
+
+        for (Author author : authors) {
+            dao.save(author);
+        }
+
+        //compares two tables
+        DBLoader.forDB(ds).assertQueryTable(table("author", //
+                cols("name", "lastname"), //
+                row("Orson Scott", "Card"), //
+                row("Terry", "Pratchett")), //
+                "SELECT name, lastname FROM author", "name");
+
+    }
+
+This example shows how can You perform simple check of whether or not data satisfy assumed postconditions 
+
+The last example, the most complex
+
+    @Test
+    public void testFetchBooksByAuthor() throws Exception {
+
+        //loads data to author's table 
+        DBLoader.forDB(ds).cleanInsert(dataSet(table("author", //
+                cols("id", "name", "lastname"), //
+                row("5", "Orson", "Card") //
+                )));
+        //loads data to book's table 
+        DBLoader.forDB(ds).cleanInsert(dataSet(table("book", //
+                cols("id", "title", "author_id"), //
+                row("1", "Ender's Game", "5") //
+                )));
+
+        //fetches whole author's table to memory
+        ITable authorTable = DBExporter.forDB(ds).table("author").getDataSet().getTable("author");
+
+        //prints table to system out
+        System.out.println(DBUtils.dataSet2String(authorTable));
+
+        //transforms whole author's table to collection of entities
+        Collection<Author> authors = DBUtils.table2Entity(authorTable, new DBUtils.IEntityFactory<Author>() {
+            public Collection<Author> create(DBUtils.ITableResultSet rset) {
+                Collection<Author> authors = new LinkedList<Author>();
+                while (rset.next()) {
+                    authors.add(new Author(rset.getInteger("id"), rset.getString("name"), rset.getString("lastname")));
+                }
+                return authors;
+            }
+        });
+
+        BookstoreDao dao = new BookstoreDao(ds);
+        List<Book> books = dao.fetchBooksByAuthor(authors.iterator().next());
+        Assert.assertEquals("Ender's Game", books.get(0).getTitle());
+
+    }
+
+Exporting data
+---------------
+
+Assume that You are facing with problem of creating data to Your test cases. 
+Often such data can be fetched from your production or testing db. You can do this
+in the following manner ([ExportUseCases](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/export/ExportUseCases.java))
+
+    //fetches table of author and book
+    DBExporter.MyDataSet dataSet = DBExporter.forDB(ds).table("author", "book");
+    File dir = new File(ExportUseCases.class.getClassLoader().getResource(".").getFile()).getParentFile();
+    //saves tables in the db-csv directory
+    dataSet.write2Csv(new File(dir, "db-csv").getAbsolutePath());
+    //saves tables in the db.xml file
+    dataSet.write2Xml(new File(dir, "db.xml").getAbsolutePath());
+
+Content of the db-csv directory is following
+
+    ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ ls
+    author.csv  book.csv  table-ordering.txt
+
+    ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ cat table-ordering.txt 
+    author
+    book
+
+    ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ cat author.csv 
+    ID, NAME, LASTNAME
+    "1","Orson","Card"
+    "2","Terry","Pratchett"
+    "3","Magdalena","Kozak"
+    "4","Miroslav","Žamboch"
+    "5","Terry","Goodkind"
+
+    ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ cat book.csv 
+    ID, TITLE, AUTHOR_ID
+    "1","Ender's Game","5"
+
+Resources
+---------
+
+* [BookstoreDao.java](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDao.java)
+* [Author.java](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/model/Author.java)
+* [Book.java](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/model/Book.java)
+* [ExportUseCases.java](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/export/ExportUseCases.java)
+* [BookstoreDaoTest.java](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDaoTest.java)
+* [db.xml](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db.xml)
+* [author.csv](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/author.csv)
+* [book.csv](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/book.csv)
+* [table-ordering.txt](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/table-ordering.txt)
