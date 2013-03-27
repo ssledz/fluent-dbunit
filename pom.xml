@@ -3,7 +3,7 @@
 
     <groupId>pl.softech</groupId>
     <artifactId>fluent-dbunit</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>fluent-dbunit</name>
@@ -98,7 +98,7 @@
         <connection>scm:git:git@github.com:ssledz/fluent-dbunit.git</connection>
         <url>https://github.com/ssledz/fluent-dbunit.git</url>
         <developerConnection>scm:git:git@github.com:ssledz/fluent-dbunit.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>fluent-dbunit-1.2</tag>
     </scm>
   
     <distributionManagement>
