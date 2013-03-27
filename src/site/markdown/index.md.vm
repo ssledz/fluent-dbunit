@@ -213,3 +213,9 @@ Resources
 * [book.csv](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/book.csv)
 * [table-ordering.txt](https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/table-ordering.txt)
 
+Documentation credits
+---------------------
+
+The following people have made valuable contributions to the fluent-dbunit documentation:
+
+Armand Wilson
