@@ -84,8 +84,7 @@ mvn package
 
 <h2>Let's test some code :)</h2>
 
-<p>Assume that You have to test java class <a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDao.java">BookstoreDao</a>,
-which implements following interface</p>
+<p>Let's assume that you need to test the java class, <a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDao.java">BookstoreDao</a>, which implements the following interface:</p>
 
 <pre><code>public interface IBookstoreDao {
 
@@ -96,7 +95,7 @@ which implements following interface</p>
 }
 </code></pre>
 
-<p>Let's write the test for <a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDaoTest.java">fetchAuthorsByName</a></p>
+<p>Here is the test method for <a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDaoTest.java">fetchAuthorsByName</a>:</p>
 
 <pre><code>@Test
 public void testFetchAuthorsByName() throws Exception {
@@ -119,10 +118,9 @@ public void testFetchAuthorsByName() throws Exception {
 }
 </code></pre>
 
-<p>As You see filling a table with data is extremely easy. You can achieve this by
-writing simple one liner :)</p>
+<p>As you can see, populating a table with data is extremely easy. It can be achieved by a simple line of code. </p>
 
-<p>If You don't like to manage data in your source code you can store them either in csv or xml file</p>
+<p>If you do not want to manage data in your source code, you can store the data in a csv or xml file.</p>
 
 <pre><code>@Test
 public void testFetchAuthorsByName2() throws Exception {
@@ -143,7 +141,7 @@ public void testFetchAuthorsByName2() throws Exception {
 }
 </code></pre>
 
-<p><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db.xml">db.xml</a> could look like</p>
+<p><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db.xml">db.xml</a> may look as follows:</p>
 
 <pre><code>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;dataset&gt;
@@ -156,7 +154,7 @@ public void testFetchAuthorsByName2() throws Exception {
 &lt;/dataset&gt;
 </code></pre>
 
-<p>Next method to test is 'save' which creates or updates records in db</p>
+<p>The next method to test is the "save" method which creates or updates records in the database.</p>
 
 <pre><code>@Test
 public void testSaveAuthor() throws Exception {
@@ -187,9 +185,9 @@ public void testSaveAuthor() throws Exception {
 }
 </code></pre>
 
-<p>This example shows how can You perform simple check of whether or not data satisfy assumed postconditions </p>
+<p>This example demonstrates how you can perform a simple check to validate the assumed post-conditions. </p>
 
-<p>The last example, the most complex</p>
+<p>The last example. This one is the most complex:</p>
 
 <pre><code>@Test
 public void testFetchBooksByAuthor() throws Exception {
@@ -231,9 +229,9 @@ public void testFetchBooksByAuthor() throws Exception {
 
 <h2>Exporting data</h2>
 
-<p>Assume that You are facing with problem of creating data to Your test cases. 
-Often such data can be fetched from your production or testing db. You can do this
-in the following manner (<a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/export/ExportUseCases.java">ExportUseCases</a>)</p>
+<p>Assume that you are facing the problem of creating data for your test cases. 
+Test data can often be fetched from your production or test db. 
+You can accomplish this in the following manner (<a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/export/ExportUseCases.java">ExportUseCases</a>)</p>
 
 <pre><code>//fetches table of author and book
 DBExporter.MyDataSet dataSet = DBExporter.forDB(ds).table("author", "book");
@@ -244,7 +242,7 @@ dataSet.write2Csv(new File(dir, "db-csv").getAbsolutePath());
 dataSet.write2Xml(new File(dir, "db.xml").getAbsolutePath());
 </code></pre>
 
-<p>Content of the db-csv directory is following</p>
+<p>Content of the db-csv directory is as following</p>
 
 <pre><code>ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ ls
 author.csv  book.csv  table-ordering.txt
