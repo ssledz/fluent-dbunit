@@ -22,14 +22,14 @@
         </head>
         <body class="topBarDisabled">
           
-                        
+                
                     
     
-        <div class="container">
+        <div class="container-fluid">
           <div id="banner">
         <div class="pull-left">
-                                    <a href="https://github.com/ssledz/fluent-dbunit" id="bannerLeft">
-                                                                                                <img src="images/fluent-db-unit-banner.jpg"  alt="A Fluent Db Unit Site"/>
+                                    <a href="https://github.com/ssledz/softech-commons" id="bannerLeft">
+                                                                                                <img src="images/sof-tech-commons-banner.jpg"  alt="A SofTech Commons Site"/>
                 </a>
                       </div>
         <div class="pull-right">  </div>
@@ -41,7 +41,7 @@
                 
             
                   <li id="publishDate">Last Published: 2013-03-27</li>
-                  <li class="divider">|</li> <li id="projectVersion">Version: 1.3-SNAPSHOT</li>
+                  <li class="divider">|</li> <li id="projectVersion">Version: 1.1-SNAPSHOT</li>
                       
                 
             
@@ -53,13 +53,54 @@
                         </ul>
       </div>
 
-      
-        <div id="bodyColumn" >
+            <div class="row-fluid">
+        <div id="leftColumn" class="span3">
+          <div class="well sidebar-nav">
+                
+            
+                                    <h3>Main</h3>
+                  <ul>
+                  <li class="none">
+            <strong>Get softech commons</strong>
+          </li>
+          </ul>
+                        <h3>Documentation</h3>
+                  <ul>
+                  <li class="none">
+                          <a href="packages.html" title="Packages">Packages</a>
+            </li>
+                  <li class="none">
+                          <a href="package-forecast.html" title="Package pl.softech.forecast">Package pl.softech.forecast</a>
+            </li>
+          </ul>
+                      
+            
+                
+          <hr class="divider" />
+
+           <div id="poweredBy">
+                   
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
+    
+    <div class="g-plusone" data-href="http://maven.apache.org" data-size="tall" ></div>
+
+                   <div class="clear"></div>
+                            <div class="clear"></div>
+                            <div class="clear"></div>
+                                                                                                                         <a href="http://sof-tech.pl" title="sof-tech" class="poweredBy">
+        <img class="poweredBy"  alt="sof-tech" src="images/sof-tech-banner.jpg"    />
+      </a>
+                      </div>
+          </div>
+        </div>
+        
+        <div id="bodyColumn"  class="span9" >
                                   
             <h2>Building from sources</h2>
 
-<pre><code>git clone https://github.com/ssledz/fluent-dbunit.git
-cd cd fluent-dbunit
+<pre><code>git clone https://github.com/ssledz/softech-commons.git
+cd cd softech-commons
 mvn package
 </code></pre>
 
@@ -75,232 +116,26 @@ mvn package
 &lt;dependencies&gt;
     &lt;dependency&gt;
         &lt;groupId&gt;pl.softech&lt;/groupId&gt;
-        &lt;artifactId&gt;fluent-dbunit&lt;/artifactId&gt;
-        &lt;version&gt;1.2&lt;/version&gt;
+        &lt;artifactId&gt;softech-commons&lt;/artifactId&gt;
+        &lt;version&gt;1.1&lt;/version&gt;
         &lt;scope&gt;test&lt;/scope&gt;
     &lt;/dependency&gt;
 &lt;/dependencies&gt;
 </code></pre>
 
-<h2>Let's test some code :)</h2>
-
-<p>Let's assume that you need to test the java class, <a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDao.java">BookstoreDao</a>, which implements the following interface:</p>
-
-<pre><code>public interface IBookstoreDao {
-
-    List&lt;Author&gt; fetchAuthorsByName(String name) throws SQLException;
-    void save(Author author) throws SQLException;
-    List&lt;Book&gt; fetchBooksByAuthor(Author author) throws SQLException;
-
-}
-</code></pre>
-
-<p>Here is the test method for <a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDaoTest.java">fetchAuthorsByName</a>:</p>
-
-<pre><code>@Test
-public void testFetchAuthorsByName() throws Exception {
-
-    //loads data to author's table 
-    DBLoader.forDB(ds).cleanInsert(dataSet(table("author", //
-            cols("id", "name", "lastname"), //
-            row("1", "Orson", "Card"), //
-            row("2", "Terry", "Pratchett"), //
-            row("3", "Magdalena", "Kozak"), //
-            row("4", "Miroslav", "Žamboch"), //
-            row("5", "Terry", "Goodkind") //
-            )));
-
-    BookstoreDao dao = new BookstoreDao(ds);
-    Iterator&lt;Author&gt; it = dao.fetchAuthorsByName("Terry").iterator();
-    Assert.assertEquals("Pratchett", it.next().getLastname());
-    Assert.assertEquals("Goodkind", it.next().getLastname());
-
-}
-</code></pre>
-
-<p>As you can see, populating a table with data is extremely easy. It can be achieved by a simple line of code. </p>
-
-<p>If you do not want to manage data in your source code, you can store the data in a csv or xml file.</p>
-
-<pre><code>@Test
-public void testFetchAuthorsByName2() throws Exception {
-    String dbxml = BookstoreDaoTest.class.getResource("db.xml").getFile();
-
-    //loades data from file to memory
-    IDataSet dataSet = DBLoader.fromXml(dbxml);
-
-    //loads data to tables
-    DBLoader.forDB(ds).cleanInsert(dataSet);
-
-    //prints tables in dataset
-    System.out.println(DBUtils.dataSet2String(dataSet));
-
-    BookstoreDao dao = new BookstoreDao(ds);
-    Iterator&lt;Author&gt; it = dao.fetchAuthorsByName("Terry").iterator();
-    Assert.assertEquals("Pratchett", it.next().getLastname());
-}
-</code></pre>
-
-<p><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db.xml">db.xml</a> may look as follows:</p>
-
-<pre><code>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;dataset&gt;
-  &lt;author ID="1" NAME="Orson" LASTNAME="Card"/&gt;
-  &lt;author ID="2" NAME="Terry" LASTNAME="Pratchett"/&gt;
-  &lt;author ID="3" NAME="Magdalena" LASTNAME="Kozak"/&gt;
-  &lt;author ID="4" NAME="Miroslav" LASTNAME="&amp;#381;amboch"/&gt;
-  &lt;author ID="5" NAME="Terry" LASTNAME="Goodkind"/&gt;
-  &lt;book ID="1" TITLE="Ender&amp;apos;s Game" AUTHOR_ID="5"/&gt;
-&lt;/dataset&gt;
-</code></pre>
-
-<p>The next method to test is the "save" method which creates or updates records in the database.</p>
-
-<pre><code>@Test
-public void testSaveAuthor() throws Exception {
-
-    //loads data to author's table 
-    DBLoader.forDB(ds).cleanInsert(dataSet(table("author", //
-            cols("id", "name", "lastname"), //
-            row("5", "Orson", "Card") //
-            )));
-
-    BookstoreDao dao = new BookstoreDao(ds);
-    Author[] authors = {
-        new Author(-1, "Terry", "Pratchett"),
-        new Author(5, "Orson Scott", "Card")
-    };
-
-    for (Author author : authors) {
-        dao.save(author);
-    }
-
-    //compares two tables
-    DBLoader.forDB(ds).assertQueryTable(table("author", //
-            cols("name", "lastname"), //
-            row("Orson Scott", "Card"), //
-            row("Terry", "Pratchett")), //
-            "SELECT name, lastname FROM author", "name");
-
-}
-</code></pre>
-
-<p>This example demonstrates how you can perform a simple check to validate the assumed post-conditions. </p>
-
-<p>The last example. This one is the most complex:</p>
-
-<pre><code>@Test
-public void testFetchBooksByAuthor() throws Exception {
-
-    //loads data to author's table 
-    DBLoader.forDB(ds).cleanInsert(dataSet(table("author", //
-            cols("id", "name", "lastname"), //
-            row("5", "Orson", "Card") //
-            )));
-    //loads data to book's table 
-    DBLoader.forDB(ds).cleanInsert(dataSet(table("book", //
-            cols("id", "title", "author_id"), //
-            row("1", "Ender's Game", "5") //
-            )));
-
-    //fetches whole author's table to memory
-    ITable authorTable = DBExporter.forDB(ds).table("author").getDataSet().getTable("author");
-
-    //prints table to system out
-    System.out.println(DBUtils.dataSet2String(authorTable));
-
-    //transforms whole author's table to collection of entities
-    Collection&lt;Author&gt; authors = DBUtils.table2Entity(authorTable, new DBUtils.IEntityFactory&lt;Author&gt;() {
-        public Collection&lt;Author&gt; create(DBUtils.ITableResultSet rset) {
-            Collection&lt;Author&gt; authors = new LinkedList&lt;Author&gt;();
-            while (rset.next()) {
-                authors.add(new Author(rset.getInteger("id"), rset.getString("name"), rset.getString("lastname")));
-            }
-            return authors;
-        }
-    });
-
-    BookstoreDao dao = new BookstoreDao(ds);
-    List&lt;Book&gt; books = dao.fetchBooksByAuthor(authors.iterator().next());
-    Assert.assertEquals("Ender's Game", books.get(0).getTitle());
-
-}
-</code></pre>
-
-<h2>Exporting data</h2>
-
-<p>Assume that you are facing the problem of creating data for your test cases. 
-Test data can often be fetched from your production or test db. 
-You can accomplish this in the following manner (<a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/export/ExportUseCases.java">ExportUseCases</a>)</p>
-
-<pre><code>//fetches table of author and book
-DBExporter.MyDataSet dataSet = DBExporter.forDB(ds).table("author", "book");
-File dir = new File(ExportUseCases.class.getClassLoader().getResource(".").getFile()).getParentFile();
-//saves tables in the db-csv directory
-dataSet.write2Csv(new File(dir, "db-csv").getAbsolutePath());
-//saves tables in the db.xml file
-dataSet.write2Xml(new File(dir, "db.xml").getAbsolutePath());
-</code></pre>
-
-<p>Content of the db-csv directory is as following</p>
-
-<pre><code>ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ ls
-author.csv  book.csv  table-ordering.txt
-
-ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ cat table-ordering.txt 
-author
-book
-
-ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ cat author.csv 
-ID, NAME, LASTNAME
-"1","Orson","Card"
-"2","Terry","Pratchett"
-"3","Magdalena","Kozak"
-"4","Miroslav","Žamboch"
-"5","Terry","Goodkind"
-
-ssledz@echo:~/git/fluent-dbunit-usecase/target/db-csv$ cat book.csv 
-ID, TITLE, AUTHOR_ID
-"1","Ender's Game","5"
-</code></pre>
-
-<h2>Resources</h2>
-
-<ul>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDao.java">BookstoreDao.java</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/model/Author.java">Author.java</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/model/Book.java">Book.java</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/main/java/pl/softech/fluent/dbunit/usecase/export/ExportUseCases.java">ExportUseCases.java</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/java/pl/softech/fluent/dbunit/usecase/dao/BookstoreDaoTest.java">BookstoreDaoTest.java</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db.xml">db.xml</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/author.csv">author.csv</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/book.csv">book.csv</a></li>
-<li><a href="https://github.com/ssledz/fluent-dbunit-usecase/blob/master/src/test/resources/pl/softech/fluent/dbunit/usecase/dao/db-csv/table-ordering.txt">table-ordering.txt</a></li>
-</ul>
-
-<h2>Documentation credits</h2>
-
-<p>The following people have made valuable contributions to the fluent-dbunit documentation:</p>
-
-<p>Armand Wilson</p>
-
                   </div>
+            </div>
       
     <hr/>
 
     <footer>
-            <div class="container">
+            <div class="container-fluid">
               <div class="row span16">Copyright &copy;                   2013.
           All Rights Reserved.      
             
       </div>
 
         
-                <p id="poweredBy" class="pull-right">
-                                                                                                                      <a href="http://sof-tech.pl" title="sof-tech" class="poweredBy">
-        <img class="poweredBy"  alt="sof-tech" src="images/sof-tech-banner.jpg"    />
-      </a>
-                  </p>
         
                 </div>
     </footer>
